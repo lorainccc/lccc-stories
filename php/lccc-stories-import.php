@@ -31,7 +31,7 @@ function lc_stories_import(){
 
     $lc_args = array(
         'post_type'         => 'post',
-        'p'                => 4920,
+        'p'                => 4788,
         'posts_per_page'    => 1,
         'post_status'       => 'publish',
     );
@@ -39,6 +39,8 @@ function lc_stories_import(){
     $lcposts = get_posts( $lc_args );
 
     foreach ( $lcposts as $post ){
+
+    echo "<pre>";
 
         echo "Title: " . $post->post_title . '<br/>';
 
@@ -48,30 +50,65 @@ function lc_stories_import(){
 
         $lc_flexible_content = get_field('content_options');
 
-        echo '<pre>';
-        var_dump($lc_flexible_content);
-        echo '</pre>';
+        // echo '<pre>';
+        // var_dump($lc_flexible_content);
+        // echo '</pre>';
 
-        // if(count($lc_flexible_content > 1)){
-        //     for($i = 0; $i < count($lc_flexible_content); $i++){
-        //         switch($lc_flexible_content[$i]['acf_fc_layout']){
+        if( is_countable( $lc_flexible_content ) ){
+            if(count($lc_flexible_content) > 1){
+                for($i = 0; $i < count($lc_flexible_content); $i++){
+                    switch($lc_flexible_content[$i]['acf_fc_layout']){
 
-        //         case "content_block":
-        //             echo $lc_flexible_content[$i]['content_column'];
-        //             break
-        //         case "image_video_spotlight":
-        //             if($lc_flexible_content[$i]['spotlight_media_type'] == 'video' )
-        //             break
-        //         case "full_width_section_header":
-                    
-        //             break                
-        //         }
-        //     }
-        // }else{
-        //     echo $lc_flexible_content[0]['content_column'];
-        // }
+                    case "content_block":
+                        echo '<!-- wp:paragraph -->';
+                        echo '<p>' . str_replace("<p>", "", str_replace("</p>", "", $lc_flexible_content[$i]['content_column'])) . '</p>';
+                        echo '<!-- /wp:paragraph -->';
+                        break;
 
-        //
+                    case "image_video_spotlight":
+
+                        if($lc_flexible_content[$i]['spotlight_media_type'] == 'video' ){
+                            echo $lc_flexible_content[$i]['spotlight_video_embed'];
+                        }
+
+                        if( $lc_flexible_content[$i]['spotlight_media_type'] == 'image' ){
+                            echo '<!-- wp:image -->';
+                            echo $lc_flexible_content[$i]['spotlight_image'];
+
+                            echo '<!-- /wp:image -->';
+                        }
+
+                        break;
+
+                    case "full_width_section_header":
+                        
+                        switch($lc_flexible_content[$i]['full_width_header_type']){
+                            
+                            case "h2":
+                                echo '<!-- wp:heading -->';
+                                echo '<h2 class="wp-block-heading">' . $lc_flexible_content[$i]['full_width_header'] . '</h2>';
+                                echo '<!-- /wp:heading -->';
+                            break;
+
+                            case "h3":
+                                echo '<!-- wp:heading {"level":3} -->';
+                                echo '<h3>' . $lc_flexible_content[$i]['full_width_header'] . '</h3>';
+                                echo '<!-- /wp:heading -->';
+                            break;
+                        }
+                        
+                        break;                
+                    }
+                }
+            }else{
+                echo $lc_flexible_content[0]['content_column'];
+            }
+        echo "</pre>";
+        }
+
+
+
+        
     }
 
     wp_reset_postdata();
