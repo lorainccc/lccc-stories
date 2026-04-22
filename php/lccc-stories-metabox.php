@@ -104,6 +104,8 @@ function lc_show_stories_meta_box( $object, $box ) { ?>
         <ul id="lc-post-list" class="lc-select">
             <?php
 
+                $lc_related_post_list = get_post_meta($object->ID, 'lc_related_post_list', true);
+
                 $lc_stories_args = array(
                     'post_type'         => 'post',
                     'posts_per_page'    => -1,
@@ -113,7 +115,8 @@ function lc_show_stories_meta_box( $object, $box ) { ?>
                 $lcposts = get_posts( $lc_stories_args );
 
                 foreach ( $lcposts as $post ){
-                    echo '<li data-id="' . $post->ID . '">' . $post->post_title . '</li>';
+                    $lc_thumbnail_html = '<div class="lc_thumbnail">' . get_the_post_thumbnail( $post->ID, 'thumbnail' ) . '</div>';
+                    echo '<li data-id="' . $post->ID . '">' . $lc_thumbnail_html . '&nbsp;' . $post->post_title . '</li>';
                 };
 
             ?>
@@ -123,7 +126,20 @@ function lc_show_stories_meta_box( $object, $box ) { ?>
         <ul id="lc-related-list" class="lc-select">
 
         </ul>
-        <input type="hidden" name="lc_related_post_list" id="lc_related_post_list" value='<?php echo get_option( 'lc_related_posts');?>' />
+        <?php
+            if( is_countable($lc_related_post_list) && count($lc_related_post_list[0]) > 0 ){
+                $lc_related_post_ids = '';
+                for ( $i = 0; $i<count($lc_related_post_list[0]); $i++ ) {
+                    $lc_related_post = get_post( $lc_related_post_list[0][$i] );
+                    if ($i < 2){
+                        $lc_related_post_ids .= $lc_related_post->ID . ",";
+                    }else{
+                        $lc_related_post_ids .= $lc_related_post->ID;
+                    }
+                }
+            }
+        ?>
+        <input type="hidden" name="lc_related_post_list" id="lc_related_post_list" value='<?php echo $lc_related_post_ids;?>' />
     </div>
 </div>
 
@@ -161,6 +177,8 @@ jQuery(document).ready(function($){
 /* Save the meta box's post metadata */
 function lc_stories_save_info( $post_id, $post ) {
 
+
+
 }
 
 function update_meta_values( $post_id, $meta_key, $new_meta_value, $meta_value ) {
@@ -171,12 +189,12 @@ function update_meta_values( $post_id, $meta_key, $new_meta_value, $meta_value )
    add_post_meta( $post_id, $meta_key, $new_meta_value, true );
 
   /* If the new meta value was added and there was no previous value, add it. */
-   }elseif ( $new_meta_value && $new_meta_value != $meta_value ){
-  update_post_meta( $post_id, $meta_key, $new_meta_value );
+ }elseif ( $new_meta_value && $new_meta_value != $meta_value ){
+    update_post_meta( $post_id, $meta_key, $new_meta_value );
 
   /* If there is no new meta value but an old value exists, delete it. */
-  }elseif ( '' == $new_meta_value && $meta_value ){
-  delete_post_meta( $post_id, $meta_key, $meta_value );
+ }elseif ( '' == $new_meta_value && $meta_value ){
+    delete_post_meta( $post_id, $meta_key, $meta_value );
 
   }
 }
