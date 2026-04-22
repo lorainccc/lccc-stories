@@ -67,3 +67,14 @@ li.selected{
   text-decoration: none;
   margin: 12px 5px;
 }
+
+.lc_thumbnail{
+  width: 22px;
+  height: 22px;
+  float:left;
+  margin: -2px 5px 0 0;
+}
+
+.lc-actions{
+  width: 20% ;
+}

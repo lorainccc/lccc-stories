@@ -49,7 +49,23 @@ add_action( 'admin_enqueue_scripts', function ($hook) {
 
     if (($hook == 'post.php' || $hook == 'post-new.php') && isset($post)) {
         wp_enqueue_style('lc_google_material_icons', '//fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=cancel', 40);
-        wp_enqueue_style('lc_stories_admin_styles', plugin_dir_url( __FILE__ ) . 'css/lc-stories-admin.css', 40);
+        
     }
+    wp_enqueue_style('lc_stories_admin_styles', plugin_dir_url( __FILE__ ) . 'css/lc-stories-admin.css', 40);
 });
 
+//Disable block editor for LCCC Custom Post Types
+
+if ( is_admin() ):
+    add_filter( 'use_block_editor_for_post', 'lc_disable_block_for_posts', 10, 2 );
+endif;
+
+function lc_disable_block_for_posts( $bool, $post ) {
+	$lc_posttypes = array('post');
+
+    if ( in_array($post->post_type, $lc_posttypes ) ):
+        return false;
+    endif;
+
+    return $bool;
+}
