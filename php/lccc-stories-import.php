@@ -27,6 +27,7 @@ function lc_stories_import(){
         <h1 style="float:left; padding: 20px 0 0 0;">Stories Conversion/Import</h1>
     </div>
     <div style="display:block; width:95%; float:left; padding:10px 0;">
+        <a href="<?php echo add_query_arg( 'lc_storiesimport', "all"); ?>">Import all Stories</a>
 <?php
 
 $lc_preview_import = $_GET['lc_previewimport'];
@@ -56,7 +57,7 @@ echo '      </tr>';
 echo '  </thead>';
 echo '  <tbody>';
 
-    for ($x = 0; $x <= $lc_post_count-1; $x++) {
+    for ($x = 0; $x < $lc_post_count-1; $x++) {
 
         $lc_date = new DateTime($lcpreviewposts[$x]->post_date);
         $lc_mod_date = new DateTime($lcpreviewposts[$x]->post_modified);
@@ -306,8 +307,7 @@ echo '</div>';
 
     $lc_args = array(
         'post_type'         => 'post',
-        'p'                 => 4996,
-        //'posts_per_page'    => -1,
+        'posts_per_page'    => -1,
         'post_status'       => 'publish',
     );
 
@@ -335,7 +335,7 @@ echo '</div>';
         $lc_post_content .= '<div class="wp-block-lccc-foundation-blocks-lc-cell-block cell">';
 
         if(count($lc_flexible_content) > 1){
-            for($i = 0; $i < count($lc_flexible_content); $i++){
+            for($i = 0; $i <= count($lc_flexible_content); $i++){
 
                 switch($lc_flexible_content[$i]['acf_fc_layout']){
 
