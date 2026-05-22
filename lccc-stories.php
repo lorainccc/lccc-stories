@@ -27,7 +27,7 @@
 
 require_once( plugin_dir_path( __FILE__ ).'php/lccc-stories-cpt.php');
 require_once( plugin_dir_path( __FILE__ ).'php/lccc-stories-metabox.php');
-require_once( plugin_dir_path( __FILE__ ).'php/lccc-stories-import.php');
+//require_once( plugin_dir_path( __FILE__ ).'php/lccc-stories-import.php');
 
 add_action('admin_enqueue_scripts', function($hook) {
     global $post;

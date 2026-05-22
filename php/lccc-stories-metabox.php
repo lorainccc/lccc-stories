@@ -107,16 +107,21 @@ function lc_show_stories_meta_box( $object, $box ) { ?>
                 $lc_related_post_list = get_post_meta($object->ID, 'lc_related_post_list', true);
 
                 $lc_stories_args = array(
-                    'post_type'         => 'post',
+                    'post_type'         => 'lccc_stories',
                     'posts_per_page'    => -1,
-                    'post_status'       => 'publish',
+                    'post_status'       => 'publish, draft',
                 );
 
                 $lcposts = get_posts( $lc_stories_args );
 
                 foreach ( $lcposts as $post ){
+                    if($post->post_status == 'draft'){
+                        $lc_status = '<span class="lc-post-draft">Draft</span>';
+                    }else{
+                        $lc_status = '';
+                    }
                     $lc_thumbnail_html = '<div class="lc_thumbnail">' . get_the_post_thumbnail( $post->ID, 'thumbnail' ) . '</div>';
-                    echo '<li data-id="' . $post->ID . '">' . $lc_thumbnail_html . '&nbsp;' . $post->post_title . '</li>';
+                    echo '<li data-id="' . $post->ID . '">' . $lc_thumbnail_html . '&nbsp;' . $post->post_title . ' - ' . $lc_status . '</li>';
                 };
 
             ?>

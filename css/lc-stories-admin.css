@@ -30,12 +30,12 @@
   line-height: 1.5rem;
 }
 
-ul{
+ul#lc-post-list, ul#lc-related-list{
   list-style: none;
   border: 1px solid #ccc;
 }
 
-li.selected{
+ul#lc-post-list li.selected, ul#lc-related-list li.selected{
   color: #828282;
 }
 
@@ -51,10 +51,11 @@ li.selected{
  padding: 5px;
  display: flex;
  justify-content: space-between;
-}
 
-.lc_alert, p{
-  display: flex;
+ p{
+    display: flex;
+  }
+
 }
 
 .lc_alert, .lc-error{
@@ -77,4 +78,8 @@ li.selected{
 
 .lc-actions{
   width: 20% ;
+}
+
+.lc-post-draft{
+  color: #a6a6a6;
 }
